@@ -4,14 +4,22 @@ import android.util.Log
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class CitiesAdapter(
-    private val cities : Array<String>
+    private val cities : ArrayList<String>
 ) : RecyclerView.Adapter<CitiesAdapter.CityViewHolder>() {
 
-    class CityViewHolder(val txtCity : TextView) : ViewHolder(txtCity)
+    inner class CityViewHolder(val txtCity : TextView) : ViewHolder(txtCity) {
+        init {
+            //Way 3 - Perfecto
+            txtCity.setOnClickListener {
+                Toast.makeText(it.context, "${cities[adapterPosition]} $adapterPosition", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     override fun getItemCount(): Int {
         Log.e("bit", "getItemCount")
@@ -28,13 +36,23 @@ class CitiesAdapter(
         txtCity.textSize = 30f
         txtCity.setPadding(40, 60, 20, 60)
 
+        //way 1 Handling click events //not good
+        /*txtCity.setOnClickListener {
+            Toast.makeText(it.context, "City Clicked", Toast.LENGTH_SHORT).show()
+        }*/
+
         return CityViewHolder(txtCity)
 
     }
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         Log.e("bit", "onBindViewHolder : $position")
-        holder.txtCity.text = "${cities[position]} ${holder.txtCity.hashCode()}"
+        holder.txtCity.text = "${cities[position]}"
+
+        //way 2 -- works, however it is still not good
+        /*holder.txtCity.setOnClickListener {
+            Toast.makeText(it.context, cities[position], Toast.LENGTH_SHORT).show()
+        }*/
     }
 
 }

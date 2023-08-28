@@ -2,33 +2,61 @@ package com.bitcodetech.recyclerview1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerCities : RecyclerView
-    private val cities = arrayOf(
-        "Pune0", "Mumbai0", "Chennai0", "Delhi0",
-        "Pune1", "Mumbai1", "Chennai1", "Delhi1",
-        "Pune2", "Mumbai2", "Chennai2", "Delhi2",
-        "Pune3", "Mumbai3", "Chennai3", "Delhi3",
-        "Pune4", "Mumbai4", "Chennai4", "Delhi4",
-        "Pune5", "Mumbai5", "Chennai5", "Delhi5",
-        "Pune6", "Mumbai6", "Chennai6", "Delhi6",
-        "Pune7", "Mumbai7", "Chennai7", "Delhi7",
-        "Pune8", "Mumbai8", "Chennai8", "Delhi8"
-    )
+    private val cities = ArrayList<String>()
     private lateinit var citiesAdapter: CitiesAdapter
+    private lateinit var edtCity : EditText
+    private lateinit var btnAddCity : Button
+    private lateinit var btnRemoveCity : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        initDataSource()
         initViews()
+        setUpListeners()
+    }
+
+    private fun setUpListeners() {
+        btnAddCity.setOnClickListener {
+            cities.add(edtCity.text.toString())
+            //citiesAdapter.notifyDataSetChanged()
+            citiesAdapter.notifyItemInserted(cities.size-1)
+        }
+
+        btnRemoveCity.setOnClickListener {
+
+            val city = edtCity.text.toString()
+            if(cities.contains(city)) {
+                val indexOfCity = cities.indexOf(city)
+                cities.remove(city)
+                //citiesAdapter.notifyDataSetChanged()
+                citiesAdapter.notifyItemRemoved(indexOfCity)
+            }
+        }
+    }
+
+    private fun initDataSource() {
+        cities.add("Pune")
+        cities.add("Mumbai")
+        cities.add("Chennai")
     }
 
     private fun initViews() {
+
+        edtCity = findViewById(R.id.edtCity)
+        btnAddCity = findViewById(R.id.btnAddCity)
+        btnRemoveCity = findViewById(R.id.btnRemoveCity)
+
         recyclerCities = findViewById(R.id.recyclerCities)
         citiesAdapter = CitiesAdapter(cities)
         recyclerCities.adapter = citiesAdapter
